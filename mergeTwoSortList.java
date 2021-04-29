@@ -3,7 +3,7 @@ package helloword.leetcode;
 
 public class mergeTwoSortList {
 
-    private static ListNode mergeTwoSortList_Solution1(ListNode l1, ListNode l2){
+    public static ListNode mergeTwoSortList_Solution1(ListNode l1, ListNode l2){
       if (l1==null) return l2;
       if (l2==null) return l1;
 
