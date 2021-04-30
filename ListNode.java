@@ -16,10 +16,9 @@ class ListNode {
         this.next = next;
     }
      void PrintValue(){
-        ListNode p=this;
-        while (p!=null){
-            System.out.println(p.val);
-            p=p.next;
+        while (this!=null){
+            System.out.println(this.val);
+            this=this.next;
       }
     }
 }
