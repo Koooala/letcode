@@ -51,7 +51,7 @@ func DpGetTreeNums (num int) int {
 	dp[1]=1
 	dp[2]=2
 	for i:=3;i<=num; i++ {
-		for j:=0;j<i ;j++  { // j 给左孩子分配多少点 i-j 给右孩子分配多少个点
+		for j:=0;j<i ;j++  { // j 给左孩子分配多少点 i-j-1 给右孩子分配多少个点
 		    temp:=dp[j]*dp[i-j-1]
 			dp[i]=dp[i]+temp
 		}
