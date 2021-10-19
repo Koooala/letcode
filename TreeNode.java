@@ -153,4 +153,17 @@ class TreeNode {
 
         return  hasPathSum(root.left,target-root.val )||hasPathSum(root.right,target-root.val);
     }
+        public boolean isValidBST(TreeNode root) {
+            return f(root, Long.MIN_VALUE, Long.MAX_VALUE);
+        }
+        public boolean f(TreeNode node, long min, long max) {
+            if (node == null) {
+                return true;
+            }
+            if (node.val <= min || node.val >= max) {
+                return false;
+            }
+            return  f(node.left, min, node.val) && f(node.right, node.val, max);
+        }
 }
+

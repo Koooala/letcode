@@ -99,6 +99,26 @@ public class nQueens {
     }*/
 
 
+/*    public void backtrackWithBit (List < List < String >> res,int[] queens, int n, int rows, int columns,
+                                  int diagonals1, int diagonals2){
+        if (rows == n) {
+            List<String> board = genBoard(queens, n);
+            res.add(board);
+
+        } else {
+            int availablePositions = ((1 << n) - 1) & (~(columns | diagonals1 | diagonals2));
+            while (availablePositions != 0) {
+                int position = availablePositions & (-availablePositions);
+                availablePositions = availablePositions & (availablePositions - 1);
+                int column = Integer.bitCount(position - 1);
+                queens[rows] = column;
+                backtrackWithBit(res, queens, n, rows + 1, columns | position, (diagonals1 | position) << 1, (diagonals2 | position) >> 1);
+                queens[rows] = -1;
+            }
+        }
+    }*/
+
+
     public  List<List<String>> sovleQueens(int n){
         List<List<String>>  res =new ArrayList<List<String>>();
         int[] queens =new int[n];
