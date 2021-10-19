@@ -91,37 +91,27 @@ func threeSum(nums []int)(res [][]int)  {
 	}
 	return ans
 }
-func nearThreeSum(nums []int,target int) (res [][]int) {
-	ans:=make( map[float64][][]int,0)
+func nearThreeSum(nums []int,target int) (res int) {
 	sort.Ints(nums)
+	ans:=nums[0]+nums[1]+nums[2]
 	for i := 0; i < len(nums); i++ {
 		j, k := i + 1, len(nums) - 1
 		for j < k {
 			sum := nums[i] + nums[j] + nums[k]
-			ans[math.Abs(float64(target-sum))] = append(ans[math.Abs(float64(target-sum))], []int{nums[i], nums[j], nums[k]})
-			if sum == target {
-				j++
+			if math.Abs(float64(target - sum))<math.Abs(float64(target-res)) {
+				ans=sum
+			}
+			if sum>target {
 				k--
 			} else if sum < target {
 				j++
-			} else {
-				k--
+			} else {return ans
 			}
+
 		}
 	}
-	var key []float64
-	for k, _ := range ans {
-		key=append(key,k)
-	}
-	return ans[min(key)]
-}
-func min (nums []float64)(b float64){
-	for _, n := range nums  {
-		if b==0 || n<=b{
-			b=n
-		}
-	}
-	return b
+
+	return ans
 }* */
 
 }
