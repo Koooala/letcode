@@ -224,8 +224,79 @@ func inorderTraversal(root *TreeNode) (res []int) {
 
 
 
-func  main()  {
-	//	nus:=[]int{1,1,2,3,4,4,5}
+func search(nums []int, target int) int {
+	n:=len(nums)
+	l,r:=0,n-1
+	for l<=r {
+		mid :=l+ (r - l) / 2
+		if nums[mid] == target {
+			return mid
+		} else if nums[0] <= nums[mid] {
+			if target >= nums[0] && target <= nums[mid] {
+				r = mid - 1
+			} else {
+				l = mid + 1
+			}
+		} else {
+			if target <= nums[n-1] && target > nums[mid] {
+				l = mid + 1
+			} else {
+				r = mid - 1
+			}
+		}
+	}
+	return  -1
+}
 
-	fmt.Println(generateParenthesis(3))
+func subsets(nums []int) (res[][]int) {
+	var path []int
+	var DFS func (index int)
+	DFS= func(index int) {
+		if index==len(nums) {
+			res=append(res,append([]int{},path...))
+			return
+		}
+		// 选当前位置
+		path=append(path,nums[index])
+		DFS(index+1)
+		path=path[:len(path)-1] //拿掉 不选当前位置
+		DFS(index+1)
+	}
+	DFS(0)
+	return res
+}
+
+func permute(nums []int) (res [][]int) {
+	var DFS func (nums []int ,index int,path []int)
+	DFS=  func (nums []int ,index int,path []int) {
+		if 0==len(nums) {
+			p:=make([]int,len(path))
+			copy(p,path)
+			res=append(res,p)
+			return
+		}
+		// 选当前位置
+		for i:=0;i<len(nums) ;i++ {
+			cur:=nums[i]
+			path = append(path, cur)
+			nums = append(nums[:i], nums[i+1:]...)
+			DFS(nums, len(nums), path)
+			nums = append(nums[:i], append([]int{cur}, nums[i:]...)...)
+			path = path[:len(path)-1]
+		}
+
+	}
+	DFS(nums,len(nums),[]int{})
+	return res
+}
+
+func  main()  {
+	nums:=[]int{4,5,6,7,0,1,2}
+	i:=1
+	cur:=nums[i]
+	nums = append(nums[:i], nums[i+1:]...)
+	fmt.Println(nums)
+	nums = append(nums[:i], append([]int{cur}, nums[i:]...)...)
+	fmt.Println(nums)
+
 }
