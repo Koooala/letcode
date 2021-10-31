@@ -290,13 +290,109 @@ func permute(nums []int) (res [][]int) {
 	return res
 }
 
+
+func permuteII(nums []int) (res [][]int) {
+	n:=len(nums)
+	sort.Ints(nums)
+	vis:=make([]bool,n)
+	path:=[]int{}
+	var DFS func(index int)
+	DFS = func(index int) {
+		if index == n {
+			res = append(res, append([]int{}, path...))
+			return
+		}
+		for i, v := range nums {
+			if vis[i] || (i > 0 && !vis[i-1] && nums[i-1] != v) {
+				continue
+			}
+			path = append(path, v)
+			vis[i] = true
+			DFS(index + 1)
+			vis[i] = false
+			path = path[:len(path)-1]
+		}
+	}
+
+	DFS(0)
+	return res
+}
+
+func maxSubArray(nums []int)  int {
+	n:=len(nums)
+	dp:=make([]int,n)
+	dp[0]=nums[0]
+	for i:=1;i<n ;i++  {
+		if dp[i-1]>0 {
+			dp[i]=dp[i-1]+nums[i]
+		} else {
+			dp[i]=nums[i]
+		}
+	}
+	return  getMax(dp)
+}
+
+
+func jump (nums []int) int{
+	n:=len(nums)
+	if n==1 {
+		return 0
+	}
+	dp:=make([]int,n)
+	dp[0]=0
+	dp[1]=1
+	for i:=2;i<n ;i++{
+
+		for j:=0;j<i ;j++  {
+			min:=math.MaxInt32
+			if nums[j]>=i-j {
+				min= int(math.Min(float64(min), float64(dp[j]+1)))
+			}
+			dp[i]=min
+		}
+	}
+
+	return dp[n-1]
+}
+func getMax(nums []int) int{
+	max:=math.MinInt32
+	for _,v:=range nums {
+		if v>max {
+			max=v
+		}
+	}
+	return  max
+}
+
+
+func rotate(matrix [][]int)  {
+	n:=len(matrix)
+	// 水平线
+	for i:=0;i<n/2 ;i++  {
+		matrix[i], matrix[n-1-i] = matrix[n-1-i], matrix[i]
+	}
+	// 右对角线
+	for i:=0;i<n ;i++  {
+		for j:=0;j<i ;j++  {
+			matrix[i][j],matrix[j][i]=matrix[j][i],matrix[i][j]}
+
+	}
+}
+
+func reverseString(s []byte)  {
+	n:=len(s)
+	for l,r:=0,n-1;l<r ;l++ {
+		s[l],s[r]=s[r],s[l]
+		r--
+	}
+	fmt.Println(s)
+}
 func  main()  {
-	nums:=[]int{4,5,6,7,0,1,2}
-	i:=1
-	cur:=nums[i]
-	nums = append(nums[:i], nums[i+1:]...)
-	fmt.Println(nums)
-	nums = append(nums[:i], append([]int{cur}, nums[i:]...)...)
-	fmt.Println(nums)
+
+	s:=[]byte{'z','e','n','g','z'}
+
+
+	reverseString(s)
+
 
 }
