@@ -101,6 +101,27 @@ func mergeKLists(lists []*ListNode) *ListNode {
 	return ans
 }
 
+
+func deleteNode(node *ListNode) {
+	node.Val=node.Next.Val
+	node.Next=node.Next.Next
+
+}
+
+func isPowerOfTwo(n int) bool {
+	if n==0 {
+		return true
+	}
+	if n&(n-1)==0 {
+		return true
+	}
+	return false
+}
+
+func merge(nums1 []int, m int, nums2 []int, n int)  {
+	copy(nums1[m:], nums2)
+	sort.Ints(nums1)
+}
 func hasCycle(head *ListNode) bool {
 	mp := map[*ListNode]struct{}{}
 	for head != nil {
@@ -220,9 +241,6 @@ func inorderTraversal(root *TreeNode) (res []int) {
 	inorder(root)
 	return
 }
-
-
-
 
 func search(nums []int, target int) int {
 	n:=len(nums)
@@ -387,12 +405,23 @@ func reverseString(s []byte)  {
 	}
 	fmt.Println(s)
 }
+
+
+
+func maxProfit(prices []int) int {
+	ans := 0
+	sum := 0
+	for i := 1; i < len(prices); i++ {
+		sum += prices[i] - prices[i - 1]
+		ans =int(math.Max(float64(ans), float64(sum)))
+		if sum <0{
+			sum=0
+		}
+	}
+	return ans
+}
 func  main()  {
-
-	s:=[]byte{'z','e','n','g','z'}
-
-
-	reverseString(s)
-
+	a:=[]int{7,1,5,3,6,4}
+	fmt.Println(maxProfit(a))
 
 }
