@@ -5,6 +5,7 @@ import (
 	"math"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 func longestPalindrome (s string ) string{
@@ -420,8 +421,283 @@ func maxProfit(prices []int) int {
 	}
 	return ans
 }
+func detectCycle(head *ListNode) *ListNode {
+	// 流程： 快慢指针快跑两步，慢跑一步,当相等时候,再找个指针p从头点和慢指针一起跑，相等时候就是环点
+	s,f:=head,head
+	for f!=nil  {
+		s=s.Next
+		if f.Next==nil {
+			return nil
+		}
+		f=f.Next.Next
+		if f==s {
+			p:=head
+			for p != s {
+				p = p.Next
+				s = s.Next
+			}
+			return p
+		}
+	}
+	return nil
+}
+
+func reverseList(head *ListNode) *ListNode {
+	var prev *ListNode
+	curr := head
+	//  双指针
+	for curr != nil {
+		// 调整局部
+		next := curr.Next
+		curr.Next = prev
+		// 移动双指针
+		prev = curr
+		curr = next
+	}
+	return prev
+
+}
+
+func singleNumber(nums []int) int {
+	s:=0
+	for _,r:=range nums {
+		s^=r
+	}
+	return s
+
+}
+func isPerfectSquare(num int) bool {
+	if num<=0{
+		return true
+	}
+	l,r:=1,num/2
+	for l<r {
+		mid:=l+(r-l+1)/2
+		x:=mid*mid
+		if x==num {
+			return true
+		}
+		if x<num {
+			l=mid
+		}else {
+			r=mid-1
+		}
+	}
+	return false
+
+}
+func productExceptSelf(nums []int) []int {
+	l:=make([]int,len(nums))
+	l[0]=1
+	for i:=1;i<len(nums) ;i++  {
+		l[i]=l[i-1]*nums[i-1]
+	}
+	r:=make([]int,len(nums))
+	r[len(nums)-1]=1
+	for i:=len(nums)-2;i>=0 ;i--  {
+		r[i]=r[i+1]*nums[i+1]
+	}
+	ans:=make([]int,len(nums))
+
+	for i:=0;i<len(nums) ;i++  {
+		ans[i]=l[i]*r[i]
+	}
+	return ans
+
+}
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	res:=root
+	for  {
+		if p.Val<res.Val&&q.Val<res.Val {
+			res=res.Left
+		} else if  p.Val>res.Val&&q.Val>res.Val {
+			res=res.Right
+		} else {
+			return res
+		}
+	}
+}
+
+func rotateRight(head *ListNode, k int) *ListNode {
+	if head==nil||k==0||head.Next==nil {
+		return head
+	}
+	length:=1
+	p:=head
+	// 找到最后一个节点
+	for p.Next!=nil  {
+		p=p.Next
+		length++
+	}
+	// 连接成环
+	p.Next=head
+	// 找到要断开的位置
+	steps:=length-k%length
+	for steps>0  {
+		p=p.Next
+		steps--
+	}
+	newHead:=p.Next
+	p.Next=nil
+	return newHead
+}
+
+func reverseWords(s string) string {
+	list:=strings.Split(s," ")
+	var res string
+	for i, l := range list {
+		temp:=reverse(l)
+		space:=" "
+		if i==len(list)-1 {
+			res=res+temp
+		} else {
+			res=res+temp+space
+		}
+
+	}
+	return res
+}
+
+func reverseWords2(s string) string {
+	/*	length := len(s)
+		ret := []byte{}
+		for i := 0; i < length; {
+			start := i
+			// 找到空格处
+			for i < length && s[i] != ' ' {
+				i++
+			}
+			// 挨个反转
+			for p := start; p < i; p++ {
+				ret = append(ret, s[start + i - 1 - p])
+			}
+			// 末位添加空格
+			for i < length && s[i] == ' ' {
+				i++
+				ret = append(ret, ' ')
+			}
+		}
+		return string(ret)*/
+}
+
+
+func  reverse(l string) string{
+	n:=len(l)
+	s:=[]rune(l)
+	for l,r:=0,n-1;l<r ;l++ {
+		s[l],s[r]=s[r],s[l]
+		r--
+	}
+	return string(s)
+}
+
+func containsDuplicate(nums []int) bool {
+	mp:=make(map[int]struct{},0)
+	for _,n:=range nums {
+		if _,ok:=mp[n];ok {
+			return true
+		}
+		mp[n]= struct{}{}
+	}
+	return false
+
+
+	/*sort.Ints(nums)
+	for i:=1;i<len(nums);i++ {
+		if nums[i]==nums[i-1] {
+			return true
+		}
+	}
+return false*/
+}
+
+
+
+type LRUCache struct {
+	size int
+	capacity int
+	cache map[int]*DLinkedNode
+	head, tail *DLinkedNode
+}
+
+type DLinkedNode struct {
+	key, value int
+	prev, next *DLinkedNode
+}
+
+func initDLinkedNode(key, value int) *DLinkedNode {
+	return &DLinkedNode{
+		key: key,
+		value: value,
+	}
+}
+
+func Constructor(capacity int) LRUCache {
+	l := LRUCache{
+		cache: map[int]*DLinkedNode{},
+		head: initDLinkedNode(0, 0),
+		tail: initDLinkedNode(0, 0),
+		capacity: capacity,
+	}
+	l.head.next = l.tail
+	l.tail.prev = l.head
+	return l
+}
+
+func (l *LRUCache) Get(key int) int {
+	if _, ok := l.cache[key]; !ok {
+		return -1
+	}
+	node := l.cache[key]
+	l.moveToHead(node)
+	return node.value
+}
+
+
+func (l *LRUCache) Put(key int, value int)  {
+	if _, ok := l.cache[key]; !ok {
+		node := initDLinkedNode(key, value)
+		l.cache[key] = node
+		l.addToHead(node)
+		l.size++
+		if l.size > l.capacity {
+			removed := l.removeTail()
+			delete(l.cache, removed.key)
+			l.size--
+		}
+	} else {
+		node := l.cache[key]
+		node.value = value
+		l.moveToHead(node)
+	}
+}
+
+func (l *LRUCache) addToHead(node *DLinkedNode) {
+	node.prev = l.head
+	node.next = l.head.next
+	l.head.next.prev = node
+	l.head.next = node
+}
+
+func (l *LRUCache) removeNode(node *DLinkedNode) {
+	node.prev.next = node.next
+	node.next.prev = node.prev
+}
+
+func (l *LRUCache) moveToHead(node *DLinkedNode) {
+	l.removeNode(node)
+	l.addToHead(node)
+}
+
+func (l *LRUCache) removeTail() *DLinkedNode {
+	node := l.tail.prev
+	l.removeNode(node)
+	return node
+}
+
 func  main()  {
-	a:=[]int{7,1,5,3,6,4}
-	fmt.Println(maxProfit(a))
+	fmt.Println(reverse("abcdfr"))
+
+	fmt.Println(reverseWords2("Let's take LeetCode contest"))
 
 }
