@@ -578,6 +578,7 @@ func reverseWords2(s string) string {
 			}
 		}
 		return string(ret)*/
+	return ""
 }
 
 
@@ -695,9 +696,95 @@ func (l *LRUCache) removeTail() *DLinkedNode {
 	return node
 }
 
-func  main()  {
-	fmt.Println(reverse("abcdfr"))
-
-	fmt.Println(reverseWords2("Let's take LeetCode contest"))
+func majorityElement(nums []int) int {
+	count:=1
+	maj:=nums[0]
+	for i:=1;i<len(nums) ;i++  {
+		if nums[i]==maj {
+			count++
+		} else {
+			count--
+			if count==0 {
+				maj=nums[i+1]
+			}
+		}
+	}
+	return  maj
 
 }
+
+func m(s1 ,s2 string) string  {
+	if s1=="0"||s2=="0" {
+		return  "0"
+	}
+	l1,l2:=len(s1),len(s2)
+	res:=make([]int,l1+l2)
+
+	for i:=l1-1; i>=0;i--  {
+		x:=int(s1[i]-'0')
+		for j:=l2-1;j>=0 ;j--  {
+			y:=int(s2[j]-'0')
+			res[i+j+1]= res[i+j+1]+ x*y
+		}
+	}
+	// res:= 0 2 7 16 17 12
+
+	// 处理大于10的部分 向前进位
+	for i:=l2+l1-1;i>0 ;i--  {
+		res[i-1]=res[i-1]+res[i]/10
+		res[i]=res[i]%10
+	}
+	// res:=0 2 8 7 8 2
+	// 从不等于0的地方开始
+	index:=0
+	if res[0]==0 {
+		index=1
+	}
+	ans:=""
+	for ;index<l1+l2 ;index++  {
+		ans=ans+strconv.Itoa(res[index])
+	}
+	return  ans
+}
+
+func ser(matrix [][]int) []int {
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return []int{}
+	}
+	rows,columns:=len(matrix),len(matrix[0])
+	left,top,right,bottom:=0,0,columns-1,rows-1
+	res:=make([]int,rows*columns)
+	index:=0
+	for left<=right&&bottom>=top {
+		// (top,left) -> (top,right)
+		for i:=left;i<=right ;i++  {
+			res[index]=matrix[top][i]
+			index++
+		}
+		//	(top+1,right) -> (bottom,right)
+		for i:=top+1;i<=bottom ;i++  {
+			res[index]=matrix[i][right]
+			index++
+		}
+
+		if left<right&&top<bottom {
+			//	(bottom,right-1) -> (bottom,left+1)
+			for i:=right-1;i>left ;i--  {
+				res[index]=matrix[bottom][i]
+				index++
+			}
+			// 	//	(bottom,left) -> (top+1,left)
+			for i:=bottom;i>top ;i--  {
+				res[index]=matrix[i][left]
+				index++
+			}
+		}
+		top++
+		left++
+		right--
+		bottom--
+	}
+	return res
+}
+
+
