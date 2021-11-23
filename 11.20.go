@@ -114,6 +114,90 @@ func reverseInt (nums []int){
 	fmt.Println(nums)
 }
 
+func ser2(n int)[][]int {
+	matrix := make([][]int, n)
+	for i := range matrix {
+		matrix[i] = make([]int, n)
+	}
+	left,top,right,bottom:=0,0,n-1,n-1
+	index:=1
+	for left<=right&&bottom>=top {
+		// (top,left) -> (top,right)
+		for i:=left;i<=right ;i++  {
+			matrix[top][i]=index
+			index++
+		}
+		//	(top+1,right) -> (bottom,right)
+		for i:=top+1;i<=bottom ;i++  {
+			matrix[i][right]=index
+			index++
+		}
+
+		if left<right&&top<bottom {
+			//	(bottom,right-1) -> (bottom,left+1)
+			for i:=right-1;i>left ;i--  {
+				matrix[bottom][i]=index
+				index++
+			}
+			// 	//	(bottom,left) -> (top+1,left)
+			for i:=bottom;i>top ;i--  {
+				matrix[i][left]=index
+				index++
+			}
+		}
+		top++
+		left++
+		right--
+		bottom--
+	}
+	return matrix
+}
+
+
+
+type Node struct {
+	Val int
+	Children []*Node
+}
+
+
+func maxDepthNTree(root *Node) int {
+	if root==nil {
+		return 0
+	}
+	ans:=0
+	for _,children:=range root.Children {
+		ans= int(math.Max(float64(ans), float64(maxDepthNTree(children))))
+	}
+	return  ans+1
+}
+
+func trap(height []int) int {
+	n:=len(height)
+	if n<=2 {
+		return 0
+	}
+	l,r:=0,n-1
+	lm,rm,ans:=0,0,0
+	for l<r {
+		if height[l]<height[r] {
+			if height[l]>=lm {
+				lm=height[l]
+			} else {
+				ans=ans+ (lm-height[l])
+			}
+			l++
+		} else {
+			if height[r]>=rm {
+				rm=height[r]
+			} else {
+				ans=ans+ (rm-height[r])
+			}
+			r--
+		}
+	}
+	return  ans
+}
 func main(){
 
 	test:=[]int{2,3,6,7}
